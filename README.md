@@ -16,8 +16,8 @@ Part #2
     a) Можно сначала вручную
     b) Автоматизировать установку и настройку плагина при разворачивании Jenkins сервера
 4. Создать Jenkins Job([declarative pipeline](https://www.jenkins.io/doc/book/pipeline/syntax/#declarative-pipeline)) которая будет выполнять следующее:  
-   a) Создавать динамические Jenkins agents via EC2 Fleet plugin
-   b) на Jenkins agent выполнять скрипт, который будет подключаться к `app-server` и устанавливать Java (используя готовую Ansible role https://github.com/lean-delivery/ansible-role-java)
+    a) Создавать динамические Jenkins agents via EC2 Fleet plugin (CentOS)
+    b) на Jenkins agent выполнять скрипт, который будет подключаться к `app-server` и устанавливать Java (используя готовую Ansible role https://github.com/lean-delivery/ansible-role-java)
    
 Part #3
 TBD
