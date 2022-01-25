@@ -44,13 +44,12 @@ resource "tls_private_key" "access_key" {
 resource "aws_key_pair" "generated_key" {
   key_name   = var.key_name
   public_key = tls_private_key.access_key.public_key_openssh
+}
 
-  provisioner "local-exec" {
-    command = <<-EOT
-      echo '${tls_private_key.access_key.private_key_pem}' > ../../../'${var.key_name}'.pem
-      chmod 400 ../../../${var.key_name}.pem
-    EOT
-  }
+resource "local_file" "private_key" {
+  content         = tls_private_key.access_key.private_key_pem
+  filename        = "../../../${var.key_name}.pem"
+  file_permission = "0400"
 }
 
 resource "aws_instance" "jenkins" {
