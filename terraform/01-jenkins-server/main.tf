@@ -17,8 +17,8 @@ resource "aws_subnet" "project_subnet" {
   availability_zone = "${local.aws_region}d"
 }
 
-resource "aws_security_group" "project_security_group" {
-  name   = "project_security_group"
+resource "aws_security_group" "jenkins_security_group" {
+  name   = "jenkins_security_group"
   vpc_id = aws_vpc.project_vpc.id
 
   ingress {
@@ -33,10 +33,6 @@ resource "aws_security_group" "project_security_group" {
     to_port     = 0
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  lifecycle {
-    create_before_destroy = true
   }
 }
 
@@ -65,7 +61,7 @@ resource "aws_instance" "jenkins" {
   key_name                    = var.key_name
 
   vpc_security_group_ids = [
-    aws_security_group.project_security_group.id
+    aws_security_group.jenkins_security_group.id
   ]
 
   root_block_device {
@@ -73,6 +69,4 @@ resource "aws_instance" "jenkins" {
     volume_size           = 8
     volume_type           = "gp2"
   }
-
-  depends_on = [ aws_security_group.project_security_group ]
 }
