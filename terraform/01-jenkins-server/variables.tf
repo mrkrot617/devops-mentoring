@@ -21,3 +21,9 @@ variable "aws_provider_profile" {
   default     = "default"
   type        = string
 }
+
+variable "default_username" {
+  description = "Default username for EC2 instance (Amazon Linux 2)"
+  default     = "ec2-user"
+  type        = string
+}

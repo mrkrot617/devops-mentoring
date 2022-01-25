@@ -12,11 +12,11 @@ resource "aws_vpc" "project_vpc" {
 }
 
 resource "aws_internet_gateway" "project_internet_gateway" {
-  vpc_id =  aws_vpc.project_vpc.id
+  vpc_id = aws_vpc.project_vpc.id
 }
 
 resource "aws_route_table" "public_RT" {
-  vpc_id =  aws_vpc.project_vpc.id
+  vpc_id = aws_vpc.project_vpc.id
 
   route {
     cidr_block = "0.0.0.0/0"
@@ -31,7 +31,7 @@ resource "aws_subnet" "project_subnet" {
 }
 
 resource "aws_route_table_association" "public_RT_association" {
-  subnet_id = aws_subnet.project_subnet.id
+  subnet_id      = aws_subnet.project_subnet.id
   route_table_id = aws_route_table.public_RT.id
 }
 

@@ -15,10 +15,10 @@ output "public_ip" {
 
 output "default_username" {
   description = "Default username for Amazon Linux 2"
-  value       = "ec2-user"
+  value       = var.default_username
 }
 
-output "private_key_local_path" {
+output "ssh_connect_command" {
   description = "Private key local path"
-  value       = "${var.key_path}${var.key_name}.pem"
+  value       = "ssh -i ${var.key_path}${var.key_name}.pem ${var.default_username}@${aws_instance.jenkins.public_ip}"
 }
