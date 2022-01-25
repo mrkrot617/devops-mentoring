@@ -4,6 +4,12 @@ variable "key_name" {
   type        = string
 }
 
+variable "key_path" {
+  description = "Path to the generated key"
+  default     = "../../../"
+  type        = string
+}
+
 variable "ami_id" {
   description = "Amazon Linux 2 (us-east-1)"
   default     = "ami-08e4e35cccc6189f4"

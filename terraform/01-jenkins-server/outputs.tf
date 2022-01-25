@@ -15,5 +15,10 @@ output "public_ip" {
 
 output "default_username" {
   description = "Default username for Amazon Linux 2"
-  value = "ec2-user"
+  value       = "ec2-user"
+}
+
+output "private_key_local_path" {
+  description = "Private key local path"
+  value       = "${var.key_path}${var.key_name}.pem"
 }

@@ -4,7 +4,7 @@ provider "aws" {
 }
 
 locals {
-  aws_region          = "us-east-1"
+  aws_region = "us-east-1"
 }
 
 resource "aws_vpc" "project_vpc" {
@@ -48,7 +48,7 @@ resource "aws_key_pair" "generated_key" {
 
 resource "local_file" "private_key" {
   content         = tls_private_key.access_key.private_key_pem
-  filename        = "../../../${var.key_name}.pem"
+  filename        = "${var.key_path}${var.key_name}.pem"
   file_permission = "0400"
 }
 
