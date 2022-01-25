@@ -13,7 +13,7 @@ resource "aws_vpc" "project_vpc" {
 
 resource "aws_subnet" "project_subnet" {
   vpc_id            = aws_vpc.project_vpc.id
-  cidr_block        = "10.10.10.0/30"
+  cidr_block        = "10.10.10.0/28"
   availability_zone = "${local.aws_region}d"
 }
 
