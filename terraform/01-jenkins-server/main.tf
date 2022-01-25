@@ -5,17 +5,15 @@ provider "aws" {
 
 locals {
   aws_region          = "us-east-1"
-  internal_cidr_block = "10.10.10.0/24"
-  external_cidr_block = "0.0.0.0/0"
 }
 
 resource "aws_vpc" "project_vpc" {
-  cidr_block = local.internal_cidr_block
+  cidr_block = "10.10.10.0/24"
 }
 
 resource "aws_subnet" "project_subnet" {
   vpc_id            = aws_vpc.project_vpc.id
-  cidr_block        = local.internal_cidr_block
+  cidr_block        = "10.10.10.0/30"
   availability_zone = "${local.aws_region}d"
 }
 
@@ -27,14 +25,14 @@ resource "aws_security_group" "project_security_group" {
     from_port   = 22
     protocol    = "tcp"
     to_port     = 22
-    cidr_blocks = [local.external_cidr_block]
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   egress {
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
-    cidr_blocks = [local.external_cidr_block]
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   lifecycle {
