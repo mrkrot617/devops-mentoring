@@ -13,10 +13,7 @@ output "public_ip" {
   value       = aws_instance.jenkins.public_ip
 }
 
-output "ec2_user" {
-  value = aws_instance.jenkins.user_data
-}
-
-output "ec2_user64" {
-  value = aws_instance.jenkins.user_data_base64
+output "default_username" {
+  description = "Default username for Amazon Linux 2"
+  value = "ec2-user"
 }
