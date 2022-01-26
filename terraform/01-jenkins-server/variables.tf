@@ -6,13 +6,7 @@ variable "aws_region" {
 
 variable "key_name" {
   description = "Generated key name"
-  default     = "project_key"
-  type        = string
-}
-
-variable "key_path" {
-  description = "Path to the generated key"
-  default     = "../../../"
+  default     = "jenkins_key"
   type        = string
 }
 
