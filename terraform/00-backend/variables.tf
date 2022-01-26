@@ -15,3 +15,9 @@ variable "backend_bucket_name" {
   default     = "mentoring-terraform-states"
   type        = string
 }
+
+variable "dynamodb_table_name" {
+  description = "Table name for remote state"
+  default     = "terraform-lock"
+  type        = string
+}

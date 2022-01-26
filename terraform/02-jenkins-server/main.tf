@@ -1,9 +1,6 @@
 terraform {
   backend "s3" {
-    bucket = "mentoring-terraform-states"
-    region = "us-east-2"
     key    = "jenkins/terraform.tfstate"
-    dynamodb_table = "terraform-lock"
   }
 }
 
