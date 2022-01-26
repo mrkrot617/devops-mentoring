@@ -1,10 +1,15 @@
-provider "aws" {
-  profile = var.aws_provider_profile
-  region  = local.aws_region
+terraform {
+  backend "s3" {
+    bucket = "mentoring-terraform-states"
+    region = "us-east-2"
+    key    = "jenkins/terraform.tfstate"
+    dynamodb_table = "terraform-lock"
+  }
 }
 
-locals {
-  aws_region = "us-east-1"
+provider "aws" {
+  profile = var.aws_provider_profile
+  region  = var.aws_region
 }
 
 resource "aws_vpc" "project_vpc" {
@@ -27,7 +32,7 @@ resource "aws_route_table" "public_RT" {
 resource "aws_subnet" "project_subnet" {
   vpc_id            = aws_vpc.project_vpc.id
   cidr_block        = "10.10.10.0/28"
-  availability_zone = "${local.aws_region}d"
+  availability_zone = "${var.aws_region}d"
 }
 
 resource "aws_route_table_association" "public_RT_association" {

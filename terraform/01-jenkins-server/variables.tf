@@ -1,3 +1,9 @@
+variable "aws_region" {
+  description = "AWS app region"
+  default     = "us-east-1"
+  type        = string
+}
+
 variable "key_name" {
   description = "Generated key name"
   default     = "project_key"
