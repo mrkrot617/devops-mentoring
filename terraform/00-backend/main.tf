@@ -40,6 +40,6 @@ resource "aws_dynamodb_table" "terraform_lock" {
 }
 
 resource "local_file" "remote_state_config" {
-  content = "bucket=\"${var.backend_bucket_name}\"\nregion=\"${var.aws_region}\"\ndynamodb_table=\"${var.dynamodb_table_name}\""
+  content = "bucket = \"${var.backend_bucket_name}\"\nregion = \"${var.aws_region}\"\ndynamodb_table = \"${var.dynamodb_table_name}\""
   filename = "../dev-state.hcl"
 }
