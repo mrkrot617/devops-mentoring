@@ -27,3 +27,45 @@ Useful links:
 * [Pro Git book](https://git-scm.com/book/en/v2)
 * [Terraform Best Practices](https://www.terraform-best-practices.com/)
 * [Ansible Documentation](https://docs.ansible.com/ansible/latest/)
+
+## DOC:
+
+Create backend:
+```shell
+cd terraform/00-backend
+terraform init
+terraform apply
+```
+
+Create network:
+```shell
+cd terraform/01-network
+terraform init -backend-config ../dev-state.hcl
+terraform apply
+```
+
+Create Jenkins server:
+```shell
+cd terraform/02-jenkins-server
+terraform init -backend-config ../dev-state.hcl
+terraform apply
+```
+
+Get Jenkins SSH key:
+```shell
+terraform show -json | jq -r '.values["root_module"].resources[] | select(.name == "tls_jenkins_key") | .values["private_key_pem"]' > ~/.ssh/jenkins.pem
+chmod 400 ~/.ssh/jenkis.pem
+```
+
+Create app server:
+```shell
+cd terraform/03-app-server
+terraform init -backend-config ../dev-state.hcl
+terraform apply
+```
+
+Get app SSH key:
+```shell
+terraform show -json | jq -r '.values["root_module"].resources[] | select(.name == "tls_app_key") | .values["private_key_pem"]' > ~/.ssh/app.pem
+chmod 400 ~/.ssh/jenkis.pem
+```
