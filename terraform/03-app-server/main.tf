@@ -27,21 +27,21 @@ resource "aws_security_group" "app_security_group" {
     from_port   = 22
     protocol    = "tcp"
     to_port     = 22
-    cidr_blocks = ["86.57.167.10/32"]
+    cidr_blocks = var.allowed_external_cidr
   }
 
   ingress {
     from_port   = 80
     protocol    = "tcp"
     to_port     = 80
-    cidr_blocks = ["86.57.167.10/32"]
+    cidr_blocks = var.allowed_external_cidr
   }
 
   ingress {
     from_port   = 443
     protocol    = "tcp"
     to_port     = 443
-    cidr_blocks = ["86.57.167.10/32"]
+    cidr_blocks = var.allowed_external_cidr
   }
 
   egress {

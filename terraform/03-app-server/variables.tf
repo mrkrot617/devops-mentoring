@@ -27,3 +27,9 @@ variable "default_username" {
   default     = "ec2-user"
   type        = string
 }
+
+variable "allowed_external_cidr" {
+  description = "Allowed EPAM IPs"
+  default     = ["86.57.167.10/32"]
+  type        = list(string)
+}
