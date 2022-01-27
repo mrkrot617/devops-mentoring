@@ -1,6 +1,6 @@
 terraform {
   backend "s3" {
-    key    = "jenkins/terraform.tfstate"
+    key = "jenkins/terraform.tfstate"
   }
 }
 
@@ -27,9 +27,9 @@ resource "aws_security_group" "jenkins_security_group" {
     for_each = var.allowed_ports
 
     content {
-      from_port = ingress.value
-      to_port = ingress.value
-      protocol = "tcp"
+      from_port   = ingress.value
+      to_port     = ingress.value
+      protocol    = "tcp"
       cidr_blocks = var.allowed_external_cidr
     }
   }
