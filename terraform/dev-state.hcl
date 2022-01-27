@@ -1,3 +1,3 @@
-bucket="mentoring-terraform-states"
-region="us-east-2"
-dynamodb_table="terraform-lock"
+bucket = "mentoring-terraform-states"
+region = "us-east-2"
+dynamodb_table = "terraform-lock"
