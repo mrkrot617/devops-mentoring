@@ -54,7 +54,7 @@ terraform apply
 Get Jenkins SSH key:
 ```shell
 terraform show -json | jq -r '.values["root_module"].resources[] | select(.name == "tls_jenkins_key") | .values["private_key_pem"]' > ~/.ssh/jenkins.pem
-chmod 400 ~/.ssh/jenkis.pem
+chmod 600 ~/.ssh/jenkins.pem
 ```
 
 Create app server:
@@ -67,5 +67,5 @@ terraform apply
 Get app SSH key:
 ```shell
 terraform show -json | jq -r '.values["root_module"].resources[] | select(.name == "tls_app_key") | .values["private_key_pem"]' > ~/.ssh/app.pem
-chmod 400 ~/.ssh/jenkis.pem
+chmod 600 ~/.ssh/jenkins.pem
 ```
