@@ -52,14 +52,14 @@ resource "aws_security_group" "jenkins_security_group" {
   }
 }
 
-resource "tls_private_key" "access_key" {
+resource "tls_private_key" "jenkins_key" {
   algorithm = "RSA"
   rsa_bits  = 4096
 }
 
-resource "aws_key_pair" "generated_key" {
+resource "aws_key_pair" "jenkins_key_pair" {
   key_name   = var.key_name
-  public_key = tls_private_key.access_key.public_key_openssh
+  public_key = tls_private_key.jenkins_key.public_key_openssh
 }
 
 resource "aws_instance" "jenkins" {
