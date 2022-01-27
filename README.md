@@ -40,14 +40,14 @@ terraform apply
 Create network:
 ```shell
 cd terraform/01-network
-terraform init -backend-config ../dev-state.hcl
+terraform init -backend-config ../dev-s3-backend-config.hcl
 terraform apply
 ```
 
 Create Jenkins server:
 ```shell
 cd terraform/02-jenkins-server
-terraform init -backend-config ../dev-state.hcl
+terraform init -backend-config ../dev-s3-backend-config.hcl
 terraform apply
 ```
 
@@ -60,7 +60,7 @@ chmod 400 ~/.ssh/jenkis.pem
 Create app server:
 ```shell
 cd terraform/03-app-server
-terraform init -backend-config ../dev-state.hcl
+terraform init -backend-config ../dev-s3-backend-config.hcl
 terraform apply
 ```
 
