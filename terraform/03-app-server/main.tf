@@ -52,14 +52,14 @@ resource "aws_security_group" "app_security_group" {
   }
 }
 
-resource "tls_private_key" "app_key" {
+resource "tls_private_key" "tls_app_key" {
   algorithm = "RSA"
   rsa_bits  = 4096
 }
 
 resource "aws_key_pair" "app_key_pair" {
   key_name   = var.key_name
-  public_key = tls_private_key.app_key.public_key_openssh
+  public_key = tls_private_key.tls_app_key.public_key_openssh
 }
 
 resource "aws_instance" "app" {
