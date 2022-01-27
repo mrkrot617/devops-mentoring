@@ -69,3 +69,15 @@ resource "aws_instance" "jenkins" {
     volume_type           = "gp3"
   }
 }
+
+resource "local_file" "ansible_inventory" {
+  filename = "../../ansible/inventory"
+  file_permission = "0644"
+
+  content = templatefile("../inventory.tmpl",
+    {
+      jenkins_ip = aws_instance.jenkins.public_ip,
+      default_user = var.default_username
+    }
+  )
+}
