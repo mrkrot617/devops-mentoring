@@ -23,25 +23,15 @@ resource "aws_security_group" "app_security_group" {
   name   = "app_security_group"
   vpc_id = data.terraform_remote_state.remote_network.outputs.vpc_id
 
-  ingress {
-    from_port   = 22
-    protocol    = "tcp"
-    to_port     = 22
-    cidr_blocks = var.allowed_external_cidr
-  }
+  dynamic "ingress" {
+    for_each = var.allowed_ports
 
-  ingress {
-    from_port   = 80
-    protocol    = "tcp"
-    to_port     = 80
-    cidr_blocks = var.allowed_external_cidr
-  }
-
-  ingress {
-    from_port   = 443
-    protocol    = "tcp"
-    to_port     = 443
-    cidr_blocks = var.allowed_external_cidr
+    content {
+      from_port = ingress.value
+      to_port = ingress.value
+      protocol = "tcp"
+      cidr_blocks = var.allowed_external_cidr
+    }
   }
 
   egress {
