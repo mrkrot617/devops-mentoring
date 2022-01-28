@@ -1,37 +1,6 @@
-- name: Import epel key to rpm
-  ansible.builtin.rpm_key:
-    state: present
-    key: https://download.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-7
+- include_tasks: install.yaml
 
-- name: Add epel repository
-  yum_repository:
-    name: epel
-    description: EPEL YUM repo
-    baseurl: https://download.fedoraproject.org/pub/epel/7/$basearch
-    enabled: true
-
-- name: Import Jenkins key to rpm
-  ansible.builtin.rpm_key:
-    state: present
-    key: https://pkg.jenkins.io/redhat/jenkins.io.key
-
-- name: Get Jenkins repo
-  ansible.builtin.get_url:
-    url: https://pkg.jenkins.io/redhat/jenkins.repo
-    dest: /etc/yum.repos.d/jenkins.repo
-
-- name: Upgrade all packages
-  ansible.builtin.yum:
-    name: '*'
-    state: latest
-
-- name: Install Jenkins
-  ansible.builtin.yum:
-    name: "{{ item }}"
-    state: installed
-  with_items:
-    - java-11-amazon-corretto
-    - jenkins
+- include_tasks: settings.yaml
 
 - name: Run Jenkins
   ansible.builtin.systemd:
