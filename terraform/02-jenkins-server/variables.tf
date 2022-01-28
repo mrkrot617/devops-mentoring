@@ -36,6 +36,6 @@ variable "allowed_external_cidr" {
 
 variable "allowed_ports" {
   description = "Allow SSH, HTTP/S"
-  default     = [22, 80, 443]
+  default     = [22, 80, 443, 8080]
   type        = list(number)
 }

@@ -1,0 +1,39 @@
+- name: Install amazon-linux-extras
+  ansible.builtin.yum:
+    name: amazon-linux-extras
+    state: installed
+
+- name: Install epel repository
+  ansible.builtin.shell: amazon-linux-extras install epel -y && yum-config-manager --enable epel
+
+- name: Get Jenkins repo
+  ansible.builtin.get_url:
+    url: https://pkg.jenkins.io/redhat/jenkins.repo
+    dest: /etc/yum.repos.d/jenkins.repo
+
+- name: Import a key to rpm
+  ansible.builtin.rpm_key:
+    state: present
+    key: https://pkg.jenkins.io/redhat/jenkins.io.key
+
+- name: Upgrade all packages
+  ansible.builtin.yum:
+    name: '*'
+    state: latest
+
+- name: Install Jenkins
+  ansible.builtin.yum:
+    name: "{{ item }}"
+    state: installed
+  with_items:
+    - epel-release
+    - java-11-amazon-corretto
+    - jenkins
+
+- name: Run Jenkins
+  ansible.builtin.systemd:
+    daemon_reload: yes
+    name: jenkins
+    state: started
+    enabled: yes
+
