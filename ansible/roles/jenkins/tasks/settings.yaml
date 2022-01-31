@@ -1,8 +1,15 @@
 - name: Create custom init scripts directory.
-  file:
+  ansible.builtin.file:
     path: "{{ jenkins_home }}/init.groovy.d"
     state: directory
     owner: "{{ jenkins_process_user }}"
     group: "{{ jenkins_process_group }}"
     mode: 0775
-  notify: configure default users
+
+- name: Configure users defaults
+  ansible.builtin.template:
+    src: basic-security.groovy.j2
+    dest: "{{ jenkins_home }}/init.groovy.d/basic-security.groovy"
+    owner: "{{ jenkins_process_user }}"
+    group: "{{ jenkins_process_group }}"
+    mode: 0775
