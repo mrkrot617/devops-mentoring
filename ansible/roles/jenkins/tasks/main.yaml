@@ -2,10 +2,5 @@
 
 - include_tasks: settings.yaml
 
-- name: Run Jenkins
-  ansible.builtin.systemd:
-    daemon_reload: yes
-    name: jenkins
-    state: started
-    enabled: yes
+
 
