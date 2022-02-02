@@ -2,5 +2,7 @@
 
 - include_tasks: settings.yaml
 
+- include_tasks: plugins.yaml
+
 
 
