@@ -30,6 +30,7 @@ resource "aws_security_group" "jenkins_security_group" {
       from_port   = ingress.value
       to_port     = ingress.value
       protocol    = "tcp"
+      self        = true
       cidr_blocks = var.allowed_external_cidr
     }
   }
@@ -70,6 +71,12 @@ resource "aws_instance" "jenkins" {
   }
 }
 
+resource "random_password" "jenkins_password" {
+  length = 16
+  special          = true
+  override_special = "_%@"
+}
+
 resource "local_file" "ansible_inventory" {
   filename = "../../ansible/inventory"
   file_permission = "0644"
@@ -78,6 +85,7 @@ resource "local_file" "ansible_inventory" {
     {
       jenkins_ip = aws_instance.jenkins.public_ip,
       default_user = var.default_username
+      jenkins_password = random_password.jenkins_password.result
     }
   )
 }
