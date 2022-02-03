@@ -1,0 +1,32 @@
+- name: Create custom init scripts directory.
+  ansible.builtin.file:
+    path: "{{ jenkins_home }}/init.groovy.d"
+    state: directory
+    owner: "{{ jenkins_process_user }}"
+    group: "{{ jenkins_process_group }}"
+    mode: 0775
+
+- name: Configure users defaults
+  ansible.builtin.template:
+    src: basic-security.groovy.j2
+    dest: "{{ jenkins_home }}/init.groovy.d/basic-security.groovy"
+    owner: "{{ jenkins_process_user }}"
+    group: "{{ jenkins_process_group }}"
+    mode: 0775
+
+- name: Modify variables in init file.
+  ansible.builtin.lineinfile:
+    dest: "{{ jenkins_init_file }}"
+    insertafter: '^{{ item.option }}='
+    regexp: '^{{ item.option }}=\"\${{ item.option }} '
+    line: '{{ item.option }}="${{ item.option }} {{ item.value }}"'
+    state: present
+    mode: 0644
+  with_items: "{{ jenkins_init_changes }}"
+
+- name: Run Jenkins
+  ansible.builtin.systemd:
+    daemon_reload: yes
+    name: jenkins
+    state: started
+    enabled: yes

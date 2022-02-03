@@ -1,0 +1,8 @@
+- include_tasks: install.yaml
+
+- include_tasks: settings.yaml
+
+- include_tasks: plugins.yaml
+
+
+

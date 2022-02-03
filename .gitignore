@@ -1,1 +1,22 @@
 .idea
+
+# Local .terraform directories
+terraform/*/.terraform
+
+# .tfstate files
+terraform/*/*.tfstate
+terraform/*/*.tfstate.*
+
+# Crash log files
+terraform/*/crash.log
+
+# Ignore override files as they are usually used to override resources locally and so
+# are not checked in
+terraform/*/override.tf
+terraform/*/override.tf.json
+terraform/*/*_override.tf
+terraform/*/*_override.tf.json
+
+# Ignore CLI configuration files
+terraform/*/.terraformrc
+terraform/*/terraform.rc
