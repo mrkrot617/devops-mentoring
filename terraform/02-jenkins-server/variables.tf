@@ -30,7 +30,7 @@ variable "default_username" {
 
 variable "allowed_external_cidr" {
   description = "Allowed EPAM IPs"
-  default     = ["86.57.167.10/32", "10.10.10.0/24", "86.57.164.110/32"]
+  default     = ["86.57.167.10/32", "10.10.10.0/28", "86.57.164.110/32"]
   type        = list(string)
 }
 

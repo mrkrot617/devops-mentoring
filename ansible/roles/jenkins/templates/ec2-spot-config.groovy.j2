@@ -1,0 +1,162 @@
+#!groovy
+
+import com.amazonaws.services.ec2.model.InstanceType
+import com.cloudbees.jenkins.plugins.awscredentials.AWSCredentialsImpl
+import hudson.model.*
+import hudson.plugins.ec2.AmazonEC2Cloud
+import hudson.plugins.ec2.EC2Tag
+import hudson.plugins.ec2.SlaveTemplate
+import hudson.plugins.ec2.SpotConfiguration
+import hudson.plugins.ec2.UnixData
+import com.cloudbees.jenkins.plugins.sshcredentials.impl.*
+import com.cloudbees.plugins.credentials.*
+import com.cloudbees.plugins.credentials.common.*
+import com.cloudbees.plugins.credentials.domains.Domain
+import com.cloudbees.plugins.credentials.impl.*
+import jenkins.model.Jenkins
+import org.jenkinsci.plugins.plaincredentials.impl.*
+
+
+def SlaveTemplateUsEast1Parameters = [
+  ami:                      'ami-002237b9c6b603272',
+  associatePublicIp:        false,
+  connectBySSHProcess:      false,
+  connectUsingPublicIp:     false,
+  customDeviceMapping:      '',
+  deleteRootOnTermination:  true,
+  description:              'Jenkins agent EC2 US East 1',
+  ebsOptimized:             false,
+  iamInstanceProfile:       '',
+  idleTerminationMinutes:   '1',
+  initScript:               '',
+  instanceCapStr:           '1',
+  jvmopts:                  '',
+  labelString:              'aws.ec2.us.east.jenkins.slave',
+  launchTimeoutStr:         '',
+  numExecutors:             '1',
+  remoteAdmin:              'ec2-user',
+  remoteFS:                 '',
+  securityGroups:           'jenkins_security_group',
+  stopOnTerminate:          false,
+  subnetId:                 'subnet-09e856f035fe975ef',
+  tags:                     new EC2Tag('Name', 'jenkins-slave'),
+  tmpDir:                   '',
+  type:                     't2.micro',
+  tenancy:                  'Default',
+  useEphemeralDevices:      false,
+  useDedicatedTenancy:      false,
+  usePrivateDnsName:        false,
+  userData:                 '',
+  zone:                     'us-east-1d'
+]
+
+def AmazonEC2CloudParameters = [
+  cloudName:      'AWS',
+  instanceCapStr: '1',
+  region: 'us-east-1',
+  useInstanceProfileForCredentials: false
+]
+
+def AWSCredentialsImplParameters = [
+  id:           'jenkins-aws-key',
+  description:  'Jenkins AWS IAM key',
+  accessKey:    '123123123',
+  secretKey:    '123123123123123'
+]
+
+def keyParameters = [
+        description:  'AWS spot key',
+        id:           'aws-spot-key',
+        secret:       '',
+        userName:     'ec2-user',
+        key:          '''PRIVATE_KEY'''
+]
+
+
+AWSCredentialsImpl aWSCredentialsImpl = new AWSCredentialsImpl(
+  CredentialsScope.SYSTEM,
+  AWSCredentialsImplParameters.id,
+  AWSCredentialsImplParameters.accessKey,
+  AWSCredentialsImplParameters.secretKey,
+  AWSCredentialsImplParameters.description
+)
+
+SlaveTemplate slaveTemplateUsEast1 = new SlaveTemplate(
+        SlaveTemplateUsEast1Parameters.ami,
+        SlaveTemplateUsEast1Parameters.zone,
+        new SpotConfiguration(false),
+        SlaveTemplateUsEast1Parameters.securityGroups,
+        SlaveTemplateUsEast1Parameters.remoteFS,
+        InstanceType.fromValue(SlaveTemplateUsEast1Parameters.type),
+        SlaveTemplateUsEast1Parameters.ebsOptimized,
+        SlaveTemplateUsEast1Parameters.labelString,
+        Node.Mode.NORMAL,
+        SlaveTemplateUsEast1Parameters.description,
+        SlaveTemplateUsEast1Parameters.initScript,
+        SlaveTemplateUsEast1Parameters.tmpDir,
+        SlaveTemplateUsEast1Parameters.userData,
+        SlaveTemplateUsEast1Parameters.numExecutors,
+        SlaveTemplateUsEast1Parameters.remoteAdmin,
+        new UnixData(null, null, null, null),
+        SlaveTemplateUsEast1Parameters.jvmopts,
+        SlaveTemplateUsEast1Parameters.stopOnTerminate,
+        SlaveTemplateUsEast1Parameters.subnetId,
+        [SlaveTemplateUsEast1Parameters.tags],
+        SlaveTemplateUsEast1Parameters.idleTerminationMinutes,
+        0,
+        0,
+        SlaveTemplateUsEast1Parameters.instanceCapStr,
+        SlaveTemplateUsEast1Parameters.iamInstanceProfile,
+        SlaveTemplateUsEast1Parameters.deleteRootOnTermination,
+        SlaveTemplateUsEast1Parameters.useEphemeralDevices,
+        SlaveTemplateUsEast1Parameters.launchTimeoutStr,
+        SlaveTemplateUsEast1Parameters.associatePublicIp,
+        SlaveTemplateUsEast1Parameters.customDeviceMapping,
+        SlaveTemplateUsEast1Parameters.connectBySSHProcess,
+        false,
+        false,
+        hudson.plugins.ec2.ConnectionStrategy.PRIVATE_IP,
+        -1,
+        null,
+        hudson.plugins.ec2.HostKeyVerificationStrategyEnum.OFF,
+        hudson.plugins.ec2.Tenancy.Default,
+        hudson.plugins.ec2.EbsEncryptRootVolume.DEFAULT,
+        false,
+        false,
+        null,
+)
+
+def privateKey = new BasicSSHUserPrivateKey(
+        CredentialsScope.SYSTEM,
+        keyParameters.id,
+        keyParameters.userName,
+        new BasicSSHUserPrivateKey.DirectEntryPrivateKeySource(keyParameters.key),
+        keyParameters.secret,
+        keyParameters.description
+)
+
+AmazonEC2Cloud amazonEC2Cloud = new AmazonEC2Cloud(
+  AmazonEC2CloudParameters.cloudName,
+  AmazonEC2CloudParameters.useInstanceProfileForCredentials,
+  AWSCredentialsImplParameters.id,
+  AmazonEC2CloudParameters.region,
+  keyParameters.key,
+  keyParameters.id,
+  AmazonEC2CloudParameters.instanceCapStr,
+  [slaveTemplateUsEast1],
+  '',
+  ''
+)
+
+Jenkins jenkins = Jenkins.getInstance()
+def domain = Domain.global()
+def store = jenkins.getExtensionList('com.cloudbees.plugins.credentials.SystemCredentialsProvider')[0].getStore()
+
+store.addCredentials(domain, privateKey)
+store.addCredentials(domain, aWSCredentialsImpl)
+
+jenkins.save()
+
+jenkins.clouds.add(amazonEC2Cloud)
+
+jenkins.save()
